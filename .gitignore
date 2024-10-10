@@ -2,3 +2,4 @@
 *.o
 log.txt
 tga2stl
+img2stl

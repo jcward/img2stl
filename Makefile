@@ -1,9 +1,10 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -g
-SRC = cvar.c  main.c  math.c  patch.c  stl.c  tga.c
+CFLAGS = -Wall -Wextra -g -I/usr/include
+SRC = cvar.c  main.c  math.c  patch.c  stl.c  tga.c  png.c
 OBJ = $(SRC:.c=.o)
-TARGET = tga2stl
-LDFLAGS = -lm  # Add this line for math library
+TARGET = img2stl
+LDFLAGS = -lm -L/usr/lib -lpng
+
 
 all: $(TARGET)
 
