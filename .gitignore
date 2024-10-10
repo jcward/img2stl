@@ -1,0 +1,4 @@
+*.stl
+*.o
+log.txt
+tga2stl

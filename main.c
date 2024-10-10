@@ -180,8 +180,7 @@ int main(int argc, char **argv)
 		print(" hscale: horizontal scale, pixels-per-inch. (default = %d)", DEFAULT_HSCALE);
 		print(" vscale: vertical scaling, image gradiations-per-inch. (default = %d)", DEFAULT_VSCALE);
 		print("");
-		system("PAUSE");
-		return 0;
+		return 1;
 	}
 
 	// get any other arguments
@@ -201,7 +200,7 @@ int main(int argc, char **argv)
 	if(!(tga = file_load(argv[1])))
 	{
 		print("...unable to open \"%s\" for reading", argv[1]);
-		return 0;
+		return 2;
 	}
 
 	// convert tga file to raw pixel data
@@ -240,7 +239,6 @@ int main(int argc, char **argv)
 	free(tga);
 
 	print("");
-	system("PAUSE");
 	return 0;
 }
 //
