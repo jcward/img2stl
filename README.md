@@ -1,11 +1,11 @@
-# TGA2STL - TGA depthmap image to STL 3D mesh generator
-This is a stand-alone command-line utility for generating STL 'stereolithography' meshes from TGA depthmap images. This is useful for anybody who wishes to use their existing CAM or 3D-printer model-slicing software for milling/printing out a 3D surface that is described using a grayscale depth/height map, and require a 3D mesh as input for their software. TGA2STL utilizes an algorithm derived from one that was used during the pre-GPU days of real-time terrain LOD rendering called ROAM (Real-time Optimally Adaptive Meshing). The purpose of this program is to allow for light-weight meshes with a fewer number of triangles to depict the surface described by an input depthmap, wasting as few vertices and triangles as possible. This is accomplished by effectively only adding triangles where the surface varies, and neglecting areas that are more planar.
+# img2stl - depthmap image (.tga or .png) to STL 3D mesh generator
+This is a stand-alone command-line utility (forked from [TGA2STL](https://github.com/DEF7/TGA2STL)) for generating STL 'stereolithography' meshes from depthmap images. This is useful for anybody who wishes to use their existing CAM or 3D-printer model-slicing software for milling/printing out a 3D surface that is described using a grayscale depth/height map, and require a 3D mesh as input for their software. img2stl utilizes an algorithm derived from one that was used during the pre-GPU days of real-time terrain LOD rendering called ROAM (Real-time Optimally Adaptive Meshing). The purpose of this program is to allow for light-weight meshes with a fewer number of triangles to depict the surface described by an input depthmap, wasting as few vertices and triangles as possible. This is accomplished by effectively only adding triangles where the surface varies, and neglecting areas that are more planar.
 
 ![spiralpyramid.tga, thresh = 0.0625, 36k triangles](image_example.jpg)
 
-TGA2STL is very fast. It can generate 100k triangle meshes in a fraction of a second (less than 500ms) on a 3.5ghz machine. Many of the existing grid-based depthmap-to-mesh programs out there are extremely slow because of the language they're written in and/or because they generate huge unmanageable and unwieldy meshes with tons of triangles.
+img2stl is very fast. It can generate 100k triangle meshes in a fraction of a second (less than 500ms) on a 3.5ghz machine. Many of the existing grid-based depthmap-to-mesh programs out there are extremely slow because of the language they're written in and/or because they generate huge unmanageable and unwieldy meshes with tons of triangles.
 
-There are several depthmap/heightmap-to-mesh programs out there but the meshes that they output are cumbersome to work with. These programs strictly generate a grid of triangles with vertex heights dictated by input image pixel brightness. In contrast, TGA2STL starts with a coarse grid of triangles and subdivides them when they do not conform to the heightmap to within a threshold value. The end result is a mesh that is more friendly to 3D programs, such as CAM software, 3D printing model-slicers, and modeling/animation packages. By only creating smaller triangles where there is more detail and 'variance' the mesh uses only as many triangles as it needs to osculate the surface represented by the 2D depthmap.
+There are several depthmap/heightmap-to-mesh programs out there but the meshes that they output are cumbersome to work with. These programs strictly generate a grid of triangles with vertex heights dictated by input image pixel brightness. In contrast, img2stl starts with a coarse grid of triangles and subdivides them when they do not conform to the heightmap to within a threshold value. The end result is a mesh that is more friendly to 3D programs, such as CAM software, 3D printing model-slicers, and modeling/animation packages. By only creating smaller triangles where there is more detail and 'variance' the mesh uses only as many triangles as it needs to osculate the surface represented by the 2D depthmap.
 
 
 # Example Output
@@ -36,11 +36,17 @@ Virtually every raster imaging program supports loading/saving Targa TGA images,
 
 
 # Usage
-Using TGA2STL is as simple as dragging and dropping your 24 or 32 bit TGA depthmap onto TGA2STL.EXE. This runs TGA2STL with the filepath as the only command-line argument which will run showing details about the number of binary tree nodes and triangles that were generated. Supplying only an input file argument will use default meshing parameters and generating an STL mesh file with the input .TGA's filepath and its .TGA extension swapped out for .STL. All of the color channels found in the TGA, including the alpha channel if the TGA is 32-bit, are averaged together for each pixel to calculate its corresponding depth value.
 
-If you run TGA2STL by itself, without dropping a TGA file on it or from the command-line without any arguments, you will be presented with the command-line usage information:
+Linux usage of img2stl is displayed when running the program with no arguments:
 
-![TGA2STL usage](image_usage.jpg)
+```
+usage: img2stl <imgpath> [-thresh #.#] [-smooths #] [-hscale #] [-vscale #]
+
+ thresh: maximum mesh/heightmap error (default = 0.10)
+ smooths: smoothing passes on heightmap data before meshing. (default = 2)
+ hscale: horizontal scale, pixels-per-inch. (default = 128)
+ vscale: vertical scaling, image gradiations-per-inch. (default = 256)
+```
 
 'thresh' designates the threshold at which the mesh's deviation from the depthmap image input triggers a triangle subdivide.
 
@@ -50,15 +56,13 @@ If you run TGA2STL by itself, without dropping a TGA file on it or from the comm
 
 'vscale', similarly, establishes how many mesh units the RGB 0-255 range should span. The default is 256, thus the full range of an image's 0-255 color range is capable of generating a mesh with a vertical size of one mesh unit. If you want a shallower mesh then use a larger number. For a mesh that's 0.25 units tall you would use 1024, as the 0-255 range goes into 1024 four times, and is thus 0.25 x 1024.
 
-I have created a triplet of batch files which you can also drag-drop your TGA depthmap images onto, each with a different triangle subdivision threshold value. You can create your own batch files with your own custom parameters to do the same thing if the ones supplied don't suit your needs. If the mesh is too tall then add a '-vscale X' argument with X replaced with a larger value than the default. If your depthmap is too noisy, producing many little triangles on a rough mesh then use '-smooth X' with an X greater than the default 2 smooth passes. Conversely, if your mesh is coming out too smooth then use a smaller number of smooths, such as 1 or 0.
-
-If TGA2STL complains about an invalid TGA format it is likely due to the TGA being run-length encoded. You must find a way to convert it to the raw pixel data formatted TGA, either by loading it in an imaging program and re-exporting it or using a converter of some kind (if one exists?).
+If img2stl complains about an invalid TGA format it is likely due to the TGA being run-length encoded. You must find a way to convert it to the raw pixel data formatted TGA, either by loading it in an imaging program and re-exporting it or using a converter of some kind (if one exists?).
 
 
 # Limitations and Requirements
-There are some limitations as to what TGA2STL can work with insofar as the depthmap images themselves are concerned:
+There are some limitations as to what img2stl can work with insofar as the depthmap images themselves are concerned:
 
-- Run-length encoded (RLE) Depthmap TGA files cannot be used. Only raw-format TGA images will be recognized by TGA2STL in its current form. The origin can, however, be top-left or bottom-left (some imaging programs like to default to either, which can make loading TGA's tricky).
+- Run-length encoded (RLE) Depthmap TGA files cannot be used. Only raw-format TGA images will be recognized by img2stl in its current form. The origin can, however, be top-left or bottom-left (some imaging programs like to default to either, which can make loading TGA's tricky).
 
 - Depthmap dimensions must be a power of two. It *will* work with non-power-of-two dimensions, but you'll get a gross pixellated stair-stepping resultant mesh, which is a product of the nearest sampling of the depthmap data. With the addition of a linear interpolation, at the very least, this restriction would be resolved.
 
@@ -68,11 +72,9 @@ There are some limitations as to what TGA2STL can work with insofar as the depth
 # Possible Feature Additions and Enhancements
 This program is pretty much just as I originally wrote it. I tweaked a few parameters and the algorithm for sub-dividing triangles, but other than that this is virtually it's one and only incarnation. There are many things that can be done to improve it as a user application. Here are some of the ideas I've had, and they are in no particular order:
 
-- Loading more than just TGA depthmap images, such as JPG, BMP, PNG, etc.. is an obvious one. I am not sure I will spend the time making this happen, and if I did it almost makes more sense to just copy the code base and make it load JPGs instead of TGAs, i.e. JPG2STL.
+- Support larger images and bigger meshes with more triangles. This version of img2stl only allows meshes up to 64MB before it whines about an overflow. It also will only allow for meshes with up to 16 million triangles. I haven't calculated which comes first, 64MB or 16m triangles, but whatever is hit first will cause it to stop subdividing and/or outputting anymore triangles beyond whatever it achieved up to that point. The problem lies in that it statically allocates fixed-sized buffers to work inside of. This can be resolved by streamlining the whole program so that after it generates the binary tree of triangle subdivisions it directly writes each triangle to the STL mesh file, instead of dumping triangles to a buffer and then dumping those triangles to an STL file buffer, and then dumping that to disk.
 
-- Support larger images and bigger meshes with more triangles. This version of TGA2STL only allows meshes up to 64MB before it whines about an overflow. It also will only allow for meshes with up to 16 million triangles. I haven't calculated which comes first, 64MB or 16m triangles, but whatever is hit first will cause it to stop subdividing and/or outputting anymore triangles beyond whatever it achieved up to that point. The problem lies in that it statically allocates fixed-sized buffers to work inside of. This can be resolved by streamlining the whole program so that after it generates the binary tree of triangle subdivisions it directly writes each triangle to the STL mesh file, instead of dumping triangles to a buffer and then dumping those triangles to an STL file buffer, and then dumping that to disk.
-
-- 3D preview with real-time parameter adjustment. This could almost take the form of just an external program that calls TGA2STL and re-loads the mesh each time a new one is spit out.
+- 3D preview with real-time parameter adjustment. This could almost take the form of just an external program that calls img2stl and re-loads the mesh each time a new one is spit out.
 
 - Argument to designate the 'origin' of the mesh. Currently the origin lies at the bottom left corner of the mesh, which is really only standard for raster images and displays, but not CAM. I intend to add arguments for designating the XY position of the origin on the mesh as a 0.0-1.0 fraction of the mesh size. So for the origin to be in the center you would use an XY origin of *0.5,0.5* and that would be simple enough.
 
