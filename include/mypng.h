@@ -1,5 +1,5 @@
-#ifndef H_PNG
-#define H_PNG
+#ifndef H_MYPNG
+#define H_MYPNG
 
 // PNG defines
 #define MAX_PNGDIMENSION            8192            // max width / height for PNG, increased from TGA for potential larger images
@@ -13,4 +13,4 @@ extern unsigned char png_data[MAX_PNGBYTES];
 // Function prototypes
 int png_getpixels(const char *filename);
 
-#endif  // H_PNG
+#endif  // H_MYPNG

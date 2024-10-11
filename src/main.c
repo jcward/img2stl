@@ -10,7 +10,7 @@
 #include "math.h"
 #include "cvar.h"
 #include "tga.h"
-#include "png.h"
+#include "mypng.h"
 #include "patch.h"
 #include "stl.h"
 

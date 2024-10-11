@@ -6,7 +6,7 @@
 #include <png.h>
 
 #include "main.h"
-#include "png.h"
+#include "mypng.h"
 
 // Global variables for image information
 int png_width, png_height, png_channels, png_size;

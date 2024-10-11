@@ -1,7 +1,7 @@
 # img2stl - depthmap image (.tga or .png) to STL 3D mesh generator
 This is a stand-alone command-line utility (forked from [TGA2STL](https://github.com/DEF7/TGA2STL)) for generating STL 'stereolithography' meshes from depthmap images. This is useful for anybody who wishes to use their existing CAM or 3D-printer model-slicing software for milling/printing out a 3D surface that is described using a grayscale depth/height map, and require a 3D mesh as input for their software. img2stl utilizes an algorithm derived from one that was used during the pre-GPU days of real-time terrain LOD rendering called ROAM (Real-time Optimally Adaptive Meshing). The purpose of this program is to allow for light-weight meshes with a fewer number of triangles to depict the surface described by an input depthmap, wasting as few vertices and triangles as possible. This is accomplished by effectively only adding triangles where the surface varies, and neglecting areas that are more planar.
 
-![spiralpyramid.tga, thresh = 0.0625, 36k triangles](image_example.jpg)
+![examples/spiralpyramid.tga, thresh = 0.0625, 36k triangles](exmaples/image_example.jpg)
 
 img2stl is very fast. It can generate 100k triangle meshes in a fraction of a second (less than 500ms) on a 3.5ghz machine. Many of the existing grid-based depthmap-to-mesh programs out there are extremely slow because of the language they're written in and/or because they generate huge unmanageable and unwieldy meshes with tons of triangles.
 
@@ -10,19 +10,19 @@ There are several depthmap/heightmap-to-mesh programs out there but the meshes t
 
 # Example Output
 
-![test depthmap](image_depthmap.jpg)
+![test depthmap](examples/image_depthmap.jpg)
 
 Here's a 512x512 depthmap I've been using for testing. It is the input used for the following output mesh images. These are closeups for purposes of conveying the changes in mesh triangulation as the threshold value decreases.
 
-![thresh 0.25](image_thresh0.25.jpg)
+![thresh 0.25](examples/image_thresh0.25.jpg)
 
 This is the mesh generated from using a subdivide threshold of 0.25 with all other parameters at their defaults. (39k triangles)
 
-![thresh 0.125](image_thresh0.125.jpg)
+![thresh 0.125](examples/image_thresh0.125.jpg)
 
 Here's the mesh output with thresh set to 0.125. (78k triangles)
 
-![thresh 0.125](image_thresh0.0625.jpg)
+![thresh 0.125](examples/image_thresh0.0625.jpg)
 
 ...and 0.0625. (135k triangles)
 
