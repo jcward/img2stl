@@ -1,7 +1,7 @@
 # img2stl - depthmap image (.tga or .png) to STL 3D mesh generator
 This is a stand-alone command-line utility (forked from [TGA2STL](https://github.com/DEF7/TGA2STL)) for generating STL 'stereolithography' meshes from depthmap images. This is useful for anybody who wishes to use their existing CAM or 3D-printer model-slicing software for milling/printing out a 3D surface that is described using a grayscale depth/height map, and require a 3D mesh as input for their software. img2stl utilizes an algorithm derived from one that was used during the pre-GPU days of real-time terrain LOD rendering called ROAM (Real-time Optimally Adaptive Meshing). The purpose of this program is to allow for light-weight meshes with a fewer number of triangles to depict the surface described by an input depthmap, wasting as few vertices and triangles as possible. This is accomplished by effectively only adding triangles where the surface varies, and neglecting areas that are more planar.
 
-![examples/spiralpyramid.tga, thresh = 0.0625, 36k triangles](exmaples/image_example.jpg)
+![examples/spiralpyramid.tga, thresh = 0.0625, 36k triangles](examples/image_example.jpg)
 
 img2stl is very fast. It can generate 100k triangle meshes in a fraction of a second (less than 500ms) on a 3.5ghz machine. Many of the existing grid-based depthmap-to-mesh programs out there are extremely slow because of the language they're written in and/or because they generate huge unmanageable and unwieldy meshes with tons of triangles.
 
